@@ -37,7 +37,7 @@
    advance to the next N-tuple in the stream.)
 */
 
-#define NUM_ELS (40) /* Forty polygons at a time. */
+#define NUM_ELS (80) /* Forty polygons at a time. */
 
 #define NUM_PHASES (4) /* Some of the osc functions switch between P 
 			  alternatives. We arbitrarily choose P=4. */
