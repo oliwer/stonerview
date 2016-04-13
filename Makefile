@@ -1,12 +1,7 @@
-DEBUG = -g -Wall -Werror -Wmissing-prototypes -Wno-unused
-CFLAGS = $(DEBUG) -I/usr/X11R6/include
+CFLAGS = -O2 -g -pedantic -Wall
+LDLIBS = -lm -lGL -lGLU -lXmu -lXext -lXi -lSM -lICE -lXt -lX11
 
-OBJS = main.o osc.o move.o view.o
-
-XLIBS = -L/usr/X11R6/lib -lGL -lGLU -lXmu -lXext -lXi -lSM -lICE -lXt -lX11 
-
-stonerview: $(OBJS)
-	$(CC) $(CFLAGS) -o stonerview $(OBJS) $(XLIBS) -lm
+stonerview: osc.o move.o view.o
 
 clean:
-	rm -f *~ *.o stonerview
+	$(RM) *~ *.o stonerview
