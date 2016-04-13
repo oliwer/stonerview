@@ -33,8 +33,6 @@ static GLfloat view_scale = 4.0;
 static void setup_window(void);
 
 static void win_reshape(int width, int height);
-static void win_visible(int vis);
-static void win_idle(void);
 static void handle_events(void);
 
 static Display *dpy;
@@ -64,7 +62,7 @@ static int visual_depth(Display *dpy, int screen, Visual *visual)
 
   vi_out = XGetVisualInfo(dpy, (VisualScreenMask | VisualIDMask),
     &vi_in, &out_count);
-  if (!vi_out) 
+  if (!vi_out)
     return -1;
 
   depth = vi_out[0].depth;
@@ -188,7 +186,7 @@ int init_view(int *argc, char *argv[])
       hints.flags = USSize;
       hints.width = w;
       hints.height = h;
-      if (x != UNDEF && y != UNDEF) { 
+      if (x != UNDEF && y != UNDEF) {
 	hints.flags |= USPosition;
 	hints.x = x;
 	hints.y = y;
@@ -279,7 +277,7 @@ int init_view(int *argc, char *argv[])
     vi_in.visualid = XVisualIDFromVisual (visual);
     vi_out = XGetVisualInfo (dpy, VisualScreenMask|VisualIDMask,
       &vi_in, &out_count);
-    if (!vi_out) 
+    if (!vi_out)
       return FALSE;
 
     glx_context = glXCreateContext (dpy, vi_out, 0, GL_TRUE);
@@ -355,7 +353,7 @@ void win_draw(void)
 
     if (!wireframe) {
 
-      glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, 
+      glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE,
 	el->col);
       glBegin(GL_QUADS);
 

@@ -29,19 +29,18 @@ static osc_t *theta = NULL; /* Angle around the axis. This is expressed in
 static osc_t *rad = NULL; /* Distance from the axis. This goes up to 1000,
    but we actually allow negative distances -- that just goes to the opposite
    side of the circle -- so the range is really -1000 to 1000. */
-static osc_t *alti = NULL; /* Height (Z position). This goes from -1000 to 
+static osc_t *alti = NULL; /* Height (Z position). This goes from -1000 to
    1000. */
-static osc_t *color = NULL; /* Consider this to be an angle of a circle going 
-   around the color wheel. It's in tenths of a degree (consistency is all I 
+static osc_t *color = NULL; /* Consider this to be an angle of a circle going
+   around the color wheel. It's in tenths of a degree (consistency is all I
    ask) so it ranges from 0 to 3600. */
-static GLint prevtime = 0; /* for timing */
 
 int init_move()
 {
   /*theta = new_osc_linear(
     new_osc_wrap(0, 36000, 25),
     new_osc_constant(2000));*/
-    
+
   theta = new_osc_linear(
     new_osc_velowrap(0, 36000, new_osc_multiplex(
       new_osc_randphaser(300, 600),
@@ -50,7 +49,7 @@ int init_move()
       new_osc_constant(50),
       new_osc_constant(100))
     ),
-        
+
     new_osc_multiplex(
       new_osc_buffer(new_osc_randphaser(300, 600)),
       new_osc_buffer(new_osc_wrap(0, 36000, 10)),
@@ -59,7 +58,7 @@ int init_move()
       new_osc_buffer(new_osc_bounce(-2000, 2000, 20))
       )
     );
-        
+
   rad = new_osc_buffer(new_osc_multiplex(
     new_osc_randphaser(250, 500),
     new_osc_bounce(-1000, 1000, 10),
@@ -67,7 +66,7 @@ int init_move()
     new_osc_bounce(  400, 1000, 10),
     new_osc_bounce(-1000, 1000, -20)));
   /*rad = new_osc_constant(1000);*/
-    
+
   alti = new_osc_linear(
     new_osc_constant(-1000),
     new_osc_constant(2000 / NUM_ELS));
@@ -83,9 +82,9 @@ int init_move()
       new_osc_constant(-1000),
       new_osc_constant(2000 / NUM_ELS))
     );*/
-    
+
   /*color = new_osc_buffer(new_osc_randphaser(5, 35));*/
-    
+
   /*color = new_osc_buffer(new_osc_multiplex(
     new_osc_randphaser(25, 70),
     new_osc_wrap(0, 3600, 20),
@@ -112,32 +111,30 @@ void final_move()
 void move_increment()
 {
   int ix, val;
-  GLfloat fval;
-  GLfloat recipels = (1.0 / (GLfloat)NUM_ELS);
   GLfloat pt[2];
   GLfloat ptrad, pttheta;
-    
+
   for (ix=0; ix<NUM_ELS; ix++) {
     elem_t *el = &elist[ix];
-        
+
     /* Grab r and theta... */
     val = osc_get(theta, ix);
-    pttheta = val * (0.01 * M_PI / 180.0); 
+    pttheta = val * (0.01 * M_PI / 180.0);
     ptrad = (GLfloat)osc_get(rad, ix) * 0.001;
     /* And convert them to x,y coordinates. */
     pt[0] = ptrad * cos(pttheta);
     pt[1] = ptrad * sin(pttheta);
-        
+
     /* Set x,y,z. */
     el->pos[0] = pt[0];
     el->pos[1] = pt[1];
     el->pos[2] = (GLfloat)osc_get(alti, ix) * 0.001;
-        
+
     /* Set which way the square is rotated. This is fixed for now, although
        it would be trivial to make the squares spin as they revolve. */
     el->vervec[0] = 0.11;
     el->vervec[1] = 0.0;
-        
+
     /* Grab the color, and convert it to RGB values. Technically, we're
        converting an HSV value to RGB, where S and V are always 1. */
     val = osc_get(color, ix);
@@ -145,7 +142,7 @@ void move_increment()
       el->col[0] = ((GLfloat)val / 1200.0);
       el->col[1] = 0;
       el->col[2] = (GLfloat)(1200 - val) / 1200.0;
-    } 
+    }
     else if (val < 2400) {
       el->col[0] = (GLfloat)(2400 - val) / 1200.0;
       el->col[1] = ((GLfloat)(val - 1200) / 1200.0);
@@ -158,7 +155,7 @@ void move_increment()
     }
     el->col[3] = 1.0;
   }
-    
+
   osc_increment();
 }
 
